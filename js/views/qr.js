@@ -1,13 +1,23 @@
 import { esc } from '../util.js';
+import { qrSvg, getBase, phoneCard, bindPhoneCards } from '../phoneqr.js';
 
-const base = () => location.origin + location.pathname;
-export function qrSvg(text) { const q = window.qrcode(0, 'M'); q.addData(text); q.make(); return q.createSvgTag({ cellSize: 6, margin: 2, scalable: true }); }
+const base = () => getBase();
 
 export default async function (root, ctx) {
+  const draw = () => render(root, ctx, draw);
+  await draw();
+}
+
+async function render(root, ctx, redraw) {
   let orgs = (await ctx.api.listOrgs()).filter((o) => o.is_active);
   if (ctx.user.role === 'responsible') orgs = orgs.filter((o) => o.org_id === ctx.user.org_id);
-  root.innerHTML = `<h1>QR-коды организаций</h1><p class="muted">Сканируйте QR, чтобы открыть форму учёта нужной организации (нужен вход ответственным лицом). Адрес берётся из адресной строки: на опубликованном сайте QR поведёт на реальную ссылку.</p>
+  root.innerHTML = `<h1>QR-коды</h1>
+    <h2>Вход с телефона</h2>
+    <div class="grid2">${phoneCard({ title: 'Вход в систему', hash: '#/login', hint: 'Сканируйте телефоном: откроется страница входа. После входа ответственное лицо попадает в форму учёта.' })}
+    ${phoneCard({ title: 'Витрина для покупателей', hash: '#/showcase', hint: 'Открывает витрину со скидками (вход не нужен), удобно для плаката у кассы.' })}</div>
+    <h2>Формы учёта организаций</h2><p class="muted">Сканируйте QR, чтобы открыть форму категоризации блюд нужной организации. Если вы ещё не вошли, сначала откроется страница входа, затем сразу форма. Адрес берётся из адресной строки; на localhost его нужно заменить на адрес компьютера в сети (см. «Изменить адрес»).</p>
     <div class="grid">${orgs.map((o) => { const url = `${base()}#/f/${o.qr_slug}`; return `<div class="card qrcard"><h3>${esc(o.organization)}</h3>${qrSvg(url)}<p class="small muted" style="word-break:break-all">${esc(url)}</p><button class="btn sm" data-print="${o.org_id}">Печать плаката</button></div>`; }).join('')}</div>`;
+  bindPhoneCards(root, redraw);
   root.querySelectorAll('[data-print]').forEach((b) => {
     b.onclick = () => {
       const o = orgs.find((x) => x.org_id === Number(b.dataset.print)); const url = `${base()}#/f/${o.qr_slug}`;

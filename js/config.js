@@ -3,8 +3,8 @@ export const CONFIG = {
   // 'mock'     — всё работает прямо в браузере на демо-данных (ничего настраивать не нужно)
   // 'supabase' — реальная БД Supabase (заполните URL и anon key; схема в supabase/schema.sql)
   MODE: 'mock',
-  SUPABASE_URL: 'https://gkmuapamqyoxhzcdukhg.supabase.co',          // ЗАГЛУШКА: https://xxxx.supabase.co
-  SUPABASE_ANON_KEY: 'sb_publishable_Nr0PFfHi0i6PRtC0tJ3thQ_bROHTclq',     // ЗАГЛУШКА: публичный anon key (service_role сюда НЕЛЬЗЯ)
+  SUPABASE_URL: '',          // ЗАГЛУШКА: https://xxxx.supabase.co
+  SUPABASE_ANON_KEY: '',     // ЗАГЛУШКА: публичный anon key (service_role сюда НЕЛЬЗЯ)
   EMAIL_DOMAIN: 'foodloop-demo.app',   // домен для email учёток: <login>@<домен>
   DEMO_PASSWORD: 'demo1234', // ЗАГЛУШКА: общий демо-пароль
   TG_BOT_USERNAME: '@FoodLoopATU_bot', // ЗАГЛУШКА: имя вашего бота

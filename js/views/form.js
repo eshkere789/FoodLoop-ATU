@@ -1,3 +1,4 @@
+import { phoneCard, bindPhoneCards } from '../phoneqr.js';
 import { esc, today, toast, act, REASONS, LAB_REASON, EDU_REASON, errorHtml } from '../util.js';
 
 export default async function (root, ctx) {
@@ -23,6 +24,7 @@ export default async function (root, ctx) {
   let date = existing ? String(existing.report_date).slice(0, 10) : today();
   let items = existing ? existing.items.map((i) => ({ product_id: i.product_id, quantity_kg: i.quantity_kg, portions: i.portions, discount_reason: i.discount_reason, shelf_days_left: i.shelf_days_left, checked: true, qtyTouched: true })) : [blank()];
 
+  let qrOpen = false;
   const draw = () => {
     const o = org(), prods = allowed();
     const permitBad = o.is_lab && !(o.permit_valid_until && String(o.permit_valid_until).slice(0, 10) >= date);
@@ -33,6 +35,7 @@ export default async function (root, ctx) {
         <div><label>Дата</label><input type="date" id="date" value="${date}"></div></div>
         ${o.is_lab ? (permitBad ? '<div class="warn"><b>Допуск лаборатории не подтверждён или просрочен.</b> Отчёт можно отправить, но лоты на витрине не будут созданы.</div>' : `<div class="okbox small">Допуск лаборатории действует до ${esc(String(o.permit_valid_until).slice(0, 10))}${o.permit_supervisor ? ', куратор: ' + esc(o.permit_supervisor) : ''}.</div>`) : ''}
         ${!o.can_sell ? '<div class="okbox small">Эта организация только ведёт учёт: лоты на витрине не создаются.</div>' : ''}</div>
+      ${existing ? '' : `<details class="noprint" id="phoneqr" style="margin-bottom:16px" ${qrOpen ? 'open' : ''}><summary><b>Заполнить с телефона (QR-код)</b></summary>${phoneCard({ title: 'Форма: ' + o.organization, hash: '#/f/' + o.qr_slug, hint: 'Наведите камеру телефона: откроется эта форма учёта (при необходимости сначала вход).', mock: ctx.config.MODE === 'mock' })}</details>`}
       <div id="items">${items.map((it, i) => {
         const p = prods.find((x) => x.product_id === Number(it.product_id));
         return `<div class="itemrow" data-i="${i}"><div class="row"><div><label>Продукт</label><select data-f="product_id"><option value="">— выберите —</option>${prods.map((x) => `<option value="${x.product_id}" ${x.product_id === Number(it.product_id) ? 'selected' : ''}>${esc(x.product)}</option>`).join('')}</select></div>
@@ -46,6 +49,7 @@ export default async function (root, ctx) {
       }).join('')}</div>
       <p><button class="btn sec" id="add">+ Добавить позицию</button></p>
       <div class="card"><button class="btn sec" id="draft">Сохранить черновик</button> <button class="btn" id="send">Отправить на проверку</button></div>`;
+    const pq = root.querySelector('#phoneqr'); if (pq) { pq.addEventListener('toggle', () => { qrOpen = pq.open; }); bindPhoneCards(pq, draw); }
     const orgSel = root.querySelector('#org'); if (orgSel) orgSel.onchange = () => { orgId = Number(orgSel.value); items = [blank()]; draw(); };
     root.querySelector('#date').onchange = (e) => { date = e.target.value; draw(); };
     root.querySelectorAll('.itemrow').forEach((row) => {
