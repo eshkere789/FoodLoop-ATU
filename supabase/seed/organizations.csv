@@ -1,0 +1,11 @@
+﻿org_id,organization,org_type,is_lab,can_sell,building,pickup_from,pickup_to,responsible_user_id,is_active,qr_slug,form_url,permit_valid_until,permit_status,permit_supervisor,default_discount_pct
+1,Столовая главного корпуса,столовая,0,1,Главный корпус,15:00,17:00,1,1,canteen-main,https://example.com/f/canteen-main,,,,
+2,Буфет корпуса А,буфет,0,1,Корпус А,15:30,17:30,2,1,buffet-a,https://example.com/f/buffet-a,,,,
+3,Буфет корпуса Б,буфет,0,1,Корпус Б,15:30,17:30,3,1,buffet-b,https://example.com/f/buffet-b,,,,
+4,Учебная лаборатория кафедры технологии,лаборатория,1,1,"Корпус Б, лаб. 1",15:30,17:00,4,1,lab-tech,https://example.com/f/lab-tech,2027-06-30,Допуск проверен,Преподаватель-куратор,55
+5,Кофейня-киоск у библиотеки,киоск,0,1,Библиотека,17:00,19:00,5,1,kiosk-library,https://example.com/f/kiosk-library,,,,
+6,Столовая корпуса Б,столовая,0,1,Корпус Б,15:00,17:00,6,1,canteen-b,https://example.com/f/canteen-b,,,,
+7,ATU INN,кафе,0,1,ATU INN,16:00,18:00,7,1,atu-inn,https://example.com/f/atu-inn,,,,
+8,Учебная лаборатория хлебопечения,лаборатория,1,1,"Корпус В, лаб. 2",15:30,17:00,8,1,lab-bakery,https://example.com/f/lab-bakery,2027-03-31,Допуск проверен,Преподаватель-куратор,60
+9,Кафедра технологии пищевых производств,кафедра,0,0,Корпус В,,,9,1,dept-food-tech,https://example.com/f/dept-food-tech,,,,
+10,Столовая корпуса А,столовая,0,1,Корпус А,15:00,17:00,10,1,canteen-a,https://example.com/f/canteen-a,,,,
